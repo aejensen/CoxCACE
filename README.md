@@ -1,4 +1,4 @@
-To install the development version of TruncComp run the following commands from within R
+To install the development version of CoxCACE run the following commands from within R
 
 ```{r}
 library(devtools)
