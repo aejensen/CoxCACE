@@ -3,7 +3,6 @@ rm(list=ls())
 library(devtools)
 install_github('aejensen/CoxCACE')
 
-library(CoxCACE)
 library(parallel)
 
 set.seed(123456789)
@@ -32,7 +31,7 @@ sim2.1200 <- monteCarloSim(n = 1200, psi = 0.405, B = 1000)
 sim3.1200 <- monteCarloSim(n = 1200, psi = -0.405, B = 1000)
 
 
-boxplot(cbind(sim1.150, sim1.300))
+boxplot(cbind(sim1.150, sim1.300, sim1.600, sim1.1200))
 
 
 boxplot(sim1.150)
