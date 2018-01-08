@@ -4,8 +4,11 @@ coxCACE <- function(data, lower = -10, upper = 10) {
   R <- data$R
   C <- data$C
 
-  try(uniroot(function(b) Ubeta(time, status, R, C, b), interval=c(lower, upper))$root)
-  NA
+  tryCatch(uniroot(function(b) Ubeta(time, status, R, C, b), interval=c(lower, upper))$root,
+    error = function(c) NA,
+    warning = function(c) "warning",
+    message = function(c) "message"
+  )
 }
 
 Ubeta = function(time, status, R, C, beta) {
