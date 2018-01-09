@@ -11,9 +11,9 @@ install_github('aejensen/CoxCACE')
 ```{r}
 library(CoxCACE)
 
+set.seed(123456789)
 dat <- simulateData(n = 150, psi = 0)
 m <- CCCP(dat)
 summary(m)
+plot(m, type="cumhaz")
 ```
-
-
