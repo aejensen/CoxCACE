@@ -12,7 +12,7 @@ summary.CoxCACE <- function(object, ...) {
   cat("Complier Average Causal Effect Cox Proportional Hazards\n\n")
 
   cMat <- matrix(NA, 1, 4)
-  cMat[1,1] <- 1object$CACE
+  cMat[1,1] <- object$CACE
   cMat[1,2] <- NA
   cMat[1,3] <- NA
   cMat[1,4] <- NA
