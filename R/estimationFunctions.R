@@ -12,9 +12,10 @@ coxCACE <- function(data, lower = -10, upper = 10) {
            convergence = TRUE)
     },
     error = function(c) {
+      cat(c, "\n")
       list(CACE = NA,
            U    = NA,
-           iter = rs$iter,
+           iter = NA,
            convergence = FALSE)
     },
     warning = function(c) "warning",
