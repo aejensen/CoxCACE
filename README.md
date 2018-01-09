@@ -1,3 +1,5 @@
+# Complier Average Causal Effect for Cox Proportional Hazards (CCCP)
+
 To install the development version of CoxCACE run the following commands from within R
 
 ```{r}
@@ -10,8 +12,8 @@ install_github('aejensen/CoxCACE')
 library(CoxCACE)
 
 dat <- simulateData(n = 150, psi = 0)
-m <- coxCACE(dat)
+m <- CCCP(dat)
 summary(m)
 ```
 
-**C**omplier Average **C**ausal Effect for **C**ox **P**roportional Hazards (CCCP)
+
