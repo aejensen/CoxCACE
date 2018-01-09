@@ -1,4 +1,4 @@
-# Complier Average Causal Effect for Cox Proportional Hazards (CCCP)
+# Complier Average Causal Effect for Cox Proportional Hazards
 
 To install the development version of CoxCACE run the following commands from within R
 
