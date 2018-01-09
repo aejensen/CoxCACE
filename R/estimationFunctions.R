@@ -29,7 +29,7 @@ coxCACE <- function(data, lower = -10, upper = 10) {
     colnames(l1) <- c("time", "Lambda1", "Lambda2")
 
     l2 <- cbind(lamOpt$time, t(lamOpt$dLam))
-    colnames(l1) <- c("time", "dLambda1", "dLambda2")
+    colnames(l2) <- c("time", "dLambda1", "dLambda2")
 
     out$Lambda <- l1
     out$dLambda <- l2
