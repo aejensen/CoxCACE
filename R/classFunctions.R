@@ -14,8 +14,8 @@ summary.CoxCACE <- function(object, ...) {
   cMat <- matrix(NA, 1, 4)
   cMat[1,1] <- object$CACE
   cMat[1,2] <- NA
-  cMat[2,3] <- NA
-  cMat[2,4] <- NA
+  cMat[1,3] <- NA
+  cMat[1,4] <- NA
   colnames(cMat) <- c("Estimate", "Std. Error", "z value", "P(>|z|)")
   rownames(cMat) <- c("CACE")
 
