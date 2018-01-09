@@ -1,4 +1,4 @@
-coxCACE <- function(data, lower = -10, upper = 10) {
+CCCP <- function(data, lower = -10, upper = 10) {
   time = data$time
   status = data$status
   R <- data$R
