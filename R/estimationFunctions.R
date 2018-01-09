@@ -4,17 +4,23 @@ coxCACE <- function(data, lower = -10, upper = 10) {
   R <- data$R
   C <- data$C
 
-  estimate <- tryCatch({
+  out <- tryCatch({
       rs <- uniroot(function(b) Ubeta(time, status, R, C, b), interval=c(lower, upper))
-      rs$root
+      list(CACE = rs$root,
+           U    = rs$f.root,
+           iter = rs$iter,
+           convergence = TRUE)
     },
-    error = function(c) NA,
+    error = function(c) {
+      list(CACE = NA,
+           U    = NA,
+           iter = rs$iter,
+           convergence = FALSE)
+    },
     warning = function(c) "warning",
     message = function(c) "message"
   )
 
-  out <- list(CACE = estimate,
-              convergence = 1)
   class(out) <- append(class(out), "CoxCACE")
   out
 }
