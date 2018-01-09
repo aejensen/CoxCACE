@@ -10,5 +10,6 @@ install_github('aejensen/CoxCACE')
 library(CoxCACE)
 
 dat <- simulateData(n = 150, psi = 0)
-coxCACE(dat, lower=-3, upper=3)
+m <- coxCACE(dat)
+summary(m)
 ```
