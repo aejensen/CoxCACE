@@ -28,12 +28,15 @@ summary.CoxCACE <- function(object, ...) {
   invisible(object)
 }
 
-plot.CoxCACE <- function(object, ...) {
-  yMax <- max(object$Lambda[, c("Lambda1", "Lambda2")])
-
-  par(mfrow=c(1,2), bty="n")
-  plot(object$Lambda[, "time"], object$Lambda[, "Lambda1"],
-       type="s", ylim=c(0, yMax), xlab="t", ylab=expression(Lambda(t)))
-  plot(object$Lambda[, "time"], object$Lambda[, "Lambda2"],
-       type="s", ylim=c(0, yMax), xlab="t", ylab=expression(Lambda(t)))
+plot.CoxCACE <- function(object, type, ...) {
+  if(type == "cumhaz") {
+    yMax <- max(object$Lambda[, c("Lambda1", "Lambda2")])
+    plot(object$Lambda[, "time"], object$Lambda[, "Lambda1"],
+         type="s", ylim=c(0, yMax), xlab="t", ylab=expression(Lambda(t)), bty="n")
+    lines(object$Lambda[, "time"], object$Lambda[, "Lambda2"], type="s")
+  } else if(type == "survival") {
+    stop("not implemented yet")
+  } else {
+    stop("Wrong type as argument. Use either cumhaz or survival")
+  }
 }
