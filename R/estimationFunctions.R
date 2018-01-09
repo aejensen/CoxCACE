@@ -23,7 +23,10 @@ coxCACE <- function(data, lower = -10, upper = 10) {
 
   if(out$convergence == TRUE) {
     lamOpt <- LambdaEstimator(time, status, R, C, out$CACE)
+    out$Lam <- cbind(lamOpt$time, t(lamOpt$Lam))
+    out$dLam <- cbind(lamOpt$time, t(lamOpt$dLam))
   }
+
   class(out) <- append(class(out), "CoxCACE")
   out
 }
