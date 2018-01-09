@@ -21,6 +21,9 @@ coxCACE <- function(data, lower = -10, upper = 10) {
     message = function(c) "message"
   )
 
+  if(out$convergence == TRUE) {
+    lamOpt <- LambdaEstimator(time, status, R, C, out$CACE)
+  }
   class(out) <- append(class(out), "CoxCACE")
   out
 }
@@ -105,7 +108,7 @@ LambdaEstimator = function(time, status, R, C, beta, eps=0.01) {
     dU[j] <- (sum(v * dN) - vY %*% dLambda[, j])
   }
 
-  list(Lam = Lambda, dLam = dLambda, dU = dU)
+  list(time = stime, Lam = Lambda, dLam = dLambda, dU = dU)
 }
 
 determinant2 <- function(m) {
