@@ -1,6 +1,5 @@
 print.CoxCACE <- function(x, ...) {
-  print(paste("CACE = ", signif(x$CACE,4)))
-  invisible(x)
+  summary(x)
 }
 
 
@@ -27,4 +26,14 @@ summary.CoxCACE <- function(object, ...) {
   cat("Number of iterations:", object$iter, "\n")
 
   invisible(object)
+}
+
+plot.CoxCACE <- function(object, ...) {
+  yMax <- max(object$Lambda[, c("Lambda1", "Lambda2")])
+
+  par(mfrow=c(1,2), bty="n")
+  plot(object$Lambda[, "time"], object$Lambda[, "Lambda1"],
+       type="s", ylim=c(0, yMax), xlab="t", ylab=expression(Lambda(t)))
+  plot(object$Lambda[, "time"], object$Lambda[, "Lambda2"],
+       type="s", ylim=c(0, yMax), xlab="t", ylab=expression(Lambda(t)))
 }
