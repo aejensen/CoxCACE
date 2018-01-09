@@ -22,9 +22,17 @@ coxCACE <- function(data, lower = -10, upper = 10) {
   )
 
   if(out$convergence == TRUE) {
+    #If we found the optimal beta, get Lambda and dLambda at that value
     lamOpt <- LambdaEstimator(time, status, R, C, out$CACE)
-    out$Lam <- cbind(lamOpt$time, t(lamOpt$Lam))
-    out$dLam <- cbind(lamOpt$time, t(lamOpt$dLam))
+
+    l1 <- cbind(lamOpt$time, t(lamOpt$Lam))
+    colnames(l1) <- c("time", "Lambda1", "Lambda2")
+
+    l2 <- cbind(lamOpt$time, t(lamOpt$dLam))
+    colnames(l1) <- c("time", "dLambda1", "dLambda2")
+
+    out$Lambda <- l1
+    out$dLambda <- l2
   }
 
   class(out) <- append(class(out), "CoxCACE")
