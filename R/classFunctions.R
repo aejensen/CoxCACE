@@ -23,5 +23,8 @@ summary.CoxCACE <- function(object, ...) {
   print.default(cMat)
   cat("\n\n")
 
+  cat("Value of estimating function at estimate:", object$U, "\n")
+  cat("Number of iterations:", object$iter, "\n")
+
   invisible(object)
 }
