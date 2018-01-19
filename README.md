@@ -11,9 +11,16 @@ install_github('aejensen/CoxCACE')
 ```{r}
 library(CoxCACE)
 
-set.seed(123456789)
-dat <- simulateData(n = 150, psi = 0)
-m <- CCCP(dat)
+set.seed(12345)
+d <- simulateComplianceData(400, 2)
+m <- CCCP(d)
 summary(m)
+
 plot(m, type="cumhaz")
+abline(0, 1/80) #true complier cumulative baseline hazard
+abline(0, 1/40, lty=2) #true non-complier cumulative baseline hazard
+
+plot(m, type="survival")
+curve(exp(-x / 80), 0, 60, add=TRUE)
+curve(exp(-x / 40), 0, 60, add=TRUE)
 ```
