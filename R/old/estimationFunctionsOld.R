@@ -1,11 +1,11 @@
-CCCP <- function(data, lower = -10, upper = 10) {
+CCCPold <- function(data, lower = -10, upper = 10) {
   time = data$time
   status = data$status
   R <- data$R
   C <- data$C
 
   out <- tryCatch({
-      rs <- uniroot(function(b) Ubeta(time, status, R, C, b), interval=c(lower, upper))
+      rs <- uniroot(function(b) UbetaOld(time, status, R, C, b), interval=c(lower, upper))
       list(CACE = rs$root,
            U    = rs$f.root,
            iter = rs$iter,
@@ -23,7 +23,7 @@ CCCP <- function(data, lower = -10, upper = 10) {
 
   if(out$convergence == TRUE) {
     #If we found the optimal beta, get Lambda and dLambda at that value
-    lamOpt <- LambdaEstimator(time, status, R, C, out$CACE)
+    lamOpt <- LambdaEstimatorOld(time, status, R, C, out$CACE)
 
     l1 <- cbind(lamOpt$time, t(lamOpt$Lam))
     colnames(l1) <- c("time", "Lambda1", "Lambda2")
@@ -39,13 +39,13 @@ CCCP <- function(data, lower = -10, upper = 10) {
   out
 }
 
-Ubeta = function(time, status, R, C, beta) {
+UbetaOld = function(time, status, R, C, beta) {
   #Estimating function for beta
-  est <- LambdaEstimator(time, status, R, C, beta)
+  est <- LambdaEstimatorOld(time, status, R, C, beta)
   sum(est$dU)
 }
 
-LambdaEstimator = function(time, status, R, C, beta, eps=0.01) {
+LambdaEstimatorOld = function(time, status, R, C, beta, eps=0.01) {
   stime <- sort(time[status == 1])
   k <- length(stime)
 
@@ -120,9 +120,5 @@ LambdaEstimator = function(time, status, R, C, beta, eps=0.01) {
   }
 
   list(time = stime, Lam = Lambda, dLam = dLambda, dU = dU)
-}
-
-determinant2 <- function(m) {
-  abs(m[1, 1] * m[2, 2] - m[1, 2]^2)
 }
 
