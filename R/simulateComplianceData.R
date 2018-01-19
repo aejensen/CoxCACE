@@ -1,8 +1,9 @@
-simulateComplianceData <- function(n, psi) {
+simulateComplianceData <- function(n, psi, lambdaC = 1/80, lambdaN = 1/40) {
   p.tr <- 0.5  # Probability of assigned to treatment
   pc.tr <- 0.6 # Probability of compliance
-  lambda00 <- 1 / 40
-  lambda01 <- 1 / 80
+
+  lambda00 <- lambdaN #non-complier baseline hazard
+  lambda01 <- lambdaC #complier baseline hazard
 
   #Simulate treatment assignements
   R <- rbinom(n, 1, p.tr)

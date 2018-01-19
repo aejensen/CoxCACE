@@ -25,14 +25,14 @@ CCCP <- function(data, lower = -10, upper = 10) {
     #If we found the optimal beta, get Lambda and dLambda at that value
     lamOpt <- Lambda(time, status, R, C, out$CACE)
 
-    l1 <- cbind(lamOpt$time, t(lamOpt$Lam))
-    colnames(l1) <- c("time", "Lambda1", "Lambda2")
+    LambdaMat <- cbind(lamOpt$time, t(lamOpt$Lambda))
+    colnames(LambdaMat) <- c("time", "LambdaN", "LambdaC")
 
-    l2 <- cbind(lamOpt$time, t(lamOpt$dLam))
-    colnames(l2) <- c("time", "dLambda1", "dLambda2")
+    dLambdaMat <- cbind(lamOpt$time, t(lamOpt$dLambda))
+    colnames(dLambdaMat) <- c("time", "dLambdaN", "dLambdaC")
 
-    out$Lambda <- l1
-    out$dLambda <- l2
+    out$Lambda <- LambdaMat
+    out$dLambda <- dLambdaMat
   } else {
     message("Convergence failed")
     opt$Lambda <- NULL

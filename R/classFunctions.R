@@ -1,10 +1,9 @@
-print.CoxCACE <- function(x, ...) {
-  summary(x)
+is.CoxCACE <- function(x) {
+  inherits(x, "CoxCACE")
 }
 
-
-coef.CoxCACE <- function(x, ...) {
-  x$CACE
+coef.CoxCACE <- function(object, ...) {
+  object$CACE
 }
 
 summary.CoxCACE <- function(object, ...) {
@@ -28,15 +27,14 @@ summary.CoxCACE <- function(object, ...) {
   invisible(object)
 }
 
-plot.CoxCACE <- function(object, type, ...) {
-  if(type == "cumhaz") {
-    yMax <- max(object$Lambda[, c("Lambda1", "Lambda2")])
-    plot(object$Lambda[, "time"], object$Lambda[, "Lambda1"],
-         type="s", ylim=c(0, yMax), xlab="t", ylab=expression(Lambda(t)), bty="n")
-    lines(object$Lambda[, "time"], object$Lambda[, "Lambda2"], type="s")
-  } else if(type == "survival") {
-    stop("not implemented yet")
-  } else {
-    stop("Wrong type as argument. Use either cumhaz or survival")
-  }
+print.CoxCACE <- function(object, ...) {
+  summary(object)
+}
+
+cumhaz <- function(m) {
+  out <- cbind(m$Lambda[, "time"],
+               m$Lambda[, "LambdaN"],
+               m$Lambda[, "LambdaC"])
+  colnames(out) <- c("time", "LambdaN", "LambdaC")
+  out
 }
