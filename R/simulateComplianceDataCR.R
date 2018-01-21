@@ -76,8 +76,8 @@ simulateComplianceDataCR <- function(n, psi1, psi2) {
   d11 <- cbind(T11, status11, E1[(R == 1) & (E1 == 1)], R[(R == 1) & (E1 == 1)])
   d0 <- cbind(c(T00, T01), c(status00, status01), rep(0, n00 + n01), rep(0, n00 + n01))
 
-  d = data.frame(rbind(d10, d11, d0))
-  names(d) = c("time", "status", "C", "R")
+  d <- data.frame(rbind(d10, d11, d0))
+  names(d) <- c("time", "status", "C", "R")
 
   d
 }
