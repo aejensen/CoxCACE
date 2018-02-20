@@ -7,6 +7,6 @@ U <- function(time, status, R, C, psi) {
 UCR <- function(time, status, R, C, psi) {
   #Estimating function for psi
   est <- LambdaCR(time, status, R, C, psi)
-  sum(est$dU)
+  apply(est$dU, 1, sum)
 }
 

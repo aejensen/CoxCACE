@@ -5,9 +5,9 @@ LambdaCR = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
   psi1 <- psi[1]
   psi2 <- psi[2]
-  
+
   #Allocate output objects
-  dU <- rep(0, k)             #increments for U(psi)
+  dU <- matrix(0, 2, k)       #increments for U(psi)
   Lambda <- matrix(0, 4, k)   #Cumulative hazards:
                               #Lambda[1,] = Lambda^N_1(t)
                               #Lambda[2,] = Lambda^C_1(t)
@@ -26,7 +26,7 @@ LambdaCR = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
   dN1 <- as.numeric(time == stime[1] & status == 1)  #jumps for cause 1
   dN2 <- as.numeric(time == stime[1] & status == 2)  #jumps for cause 2
   dN <- matrix(c(dN1, dN2), ncol = 1)
-  
+
   Y <- as.numeric(time >= stime[1])   #at-risk indicator
 
   #Calculate Hn and Hc functions
@@ -36,12 +36,12 @@ LambdaCR = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
   #Setup design matrix
   X1 <- cbind(Y * (R * (1 - C) + (1 - R) * Hn),
               Y * (R * C * exp(psi1) + (1 - R) * Hc))
-  
+
   X2 <- cbind(Y * (R * (1 - C) + (1 - R) * Hn),
               Y * (R * C * exp(psi2) + (1 - R) * Hc))
-  
+
   X <- as.matrix(Matrix::bdiag(X1, X2))
-  
+
   #Setup weight matrix
   W1 <- diag(exp(-psi1 * R * C), n)
   W2 <- diag(exp(-psi2 * R * C), n)
@@ -59,8 +59,11 @@ LambdaCR = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
   Lambda[, 1] <- dLambda[, 1] + 0
 
   #Calculate increment for U(psi)
-  v <- matrix(c(Y * R * C, Y * R * C), ncol = 1)
-  dU[1] <- t(v) %*% (dN - X %*% dLambda[, 1])
+  V <- matrix(NA, 2*n , 2)
+  V[,1] <- c(Y * R * C, rep(0, n))
+  V[,2] <- c(rep(0, n), Y * R * C)
+
+  dU[, 1] <- t(V) %*% (dN - X %*% dLambda[, 1])
 
   ###################################
   #### Loop through all the jumps ###
@@ -69,7 +72,7 @@ LambdaCR = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
     dN1 <- as.numeric(time == stime[j] & status == 1) #jumps for cause 1
     dN2 <- as.numeric(time == stime[j] & status == 2) #jumps for cause 2
     dN <- matrix(c(dN1, dN2), ncol = 1)
-    
+
     Y <- as.numeric(time >= stime[j])  #at-risk indicator
 
     #Calculate Hn and Hc functions
@@ -79,13 +82,13 @@ LambdaCR = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
     #Setup design matrix
     X1 <- cbind(Y * (R * (1 - C) + (1 - R) * Hn),
-               Y * (R * C * exp(psi1) + (1 - R) * Hc))
-    
+                Y * (R * C * exp(psi1) + (1 - R) * Hc))
+
     X2 <- cbind(Y * (R * (1 - C) + (1 - R) * Hn),
-               Y * (R * C * exp(psi2) + (1 - R) * Hc))
+                Y * (R * C * exp(psi2) + (1 - R) * Hc))
 
     X <- as.matrix(Matrix::bdiag(X1, X2))
-  
+
     #Setup weight matrix
     W1 <- diag(exp(-psi1 * R * C), n)
     W2 <- diag(exp(-psi2 * R * C), n)
@@ -103,8 +106,11 @@ LambdaCR = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
     Lambda[, j] <- dLambda[, j] + Lambda[, j - 1]
 
     #Calculate increment for U(psi)
-    v <- matrix(c(Y * R * C, Y * R * C), ncol = 1)
-    dU[j] <- t(v) %*% (dN - X %*% dLambda[, j])
+    V <- matrix(NA, 2*n , 2)
+    V[,1] <- c(Y * R * C, rep(0, n))
+    V[,2] <- c(rep(0, n), Y * R * C)
+
+    dU[, j] <- t(V) %*% (dN - X %*% dLambda[, j])
   }
 
   list(time = stime, Lambda = Lambda, dLambda = dLambda, dU = dU)
