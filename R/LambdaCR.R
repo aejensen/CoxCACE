@@ -1,4 +1,4 @@
-LambdaCR = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
+LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
   n <- length(R)
   stime <- sort(time[status != 0])
   k <- length(stime)
@@ -25,9 +25,9 @@ LambdaCR = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
   ##########################################
   dN1 <- as.numeric(time == stime[1] & status == 1)  #jumps for cause 1
   dN2 <- as.numeric(time == stime[1] & status == 2)  #jumps for cause 2
-  dN <- matrix(c(dN1, dN2), ncol = 1)
+  dN <- matrix(c(dN1, dN2), ncol = 1)                #2n x 1 vector of jumps
 
-  Y <- as.numeric(time >= stime[1])   #at-risk indicator
+  Y <- as.numeric(time >= stime[1])                  #at-risk indicator
 
   #Calculate Hn and Hc functions
   Hc <- pc
@@ -71,9 +71,9 @@ LambdaCR = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
   for (j in 2:k) {
     dN1 <- as.numeric(time == stime[j] & status == 1) #jumps for cause 1
     dN2 <- as.numeric(time == stime[j] & status == 2) #jumps for cause 2
-    dN <- matrix(c(dN1, dN2), ncol = 1)
+    dN <- matrix(c(dN1, dN2), ncol = 1)               #2n x 1 vector of jumps
 
-    Y <- as.numeric(time >= stime[j])  #at-risk indicator
+    Y <- as.numeric(time >= stime[j])                  #at-risk indicator
 
     #Calculate Hn and Hc functions
     Hdenom <- pc * exp(-Lambda[2, j - 1] - Lambda[4, j - 1]) + (1 - pc) * exp(-Lambda[1, j - 1] - Lambda[3, j - 1])
