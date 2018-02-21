@@ -1,4 +1,4 @@
-LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
+LambdaCR <- function(time, status, R, C, psi, maxConditionNumber=300, verbose=TRUE) {
   n <- length(R)
   stime <- sort(time[status != 0])
   k <- length(stime)
@@ -49,14 +49,14 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
   #Calculate increments and update Lambda
   crossMat <- Matrix::t(X) %*% W %*% X
-  increment <- tryCatch(Matrix::solve(crossMat) %*% (Matrix::t(X) %*% W %*% dN), error = function(e) e)
-  if(any(class(increment) == "error")) {
+  condNum <- kappa(crossMat)
+  if(condNum < maxConditionNumber) {
+    dLambda[, 1] <- as.vector(Matrix::solve(crossMat) %*% (Matrix::t(X) %*% W %*% dN))
+  } else {
     dLambda[, 1] <- rep(0, 4)
     if(verbose) {
-      message("Ill-conditioned design matrix at time = ", stime[1])
+      message("Ill-conditioned design matrix at time = ", stime[1], ". Condition number = ", condNum)
     }
-  } else {
-    dLambda[, 1] <- as.vector(increment)
   }
   Lambda[, 1] <- dLambda[, 1] + 0
 
@@ -79,6 +79,7 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
     #Calculate Hn and Hc functions
     Hdenom <- pc * exp(-Lambda[2, j - 1] - Lambda[4, j - 1]) + (1 - pc) * exp(-Lambda[1, j - 1] - Lambda[3, j - 1])
+
     Hn <- ((1 - pc) * exp(-Lambda[1, j - 1] - Lambda[3, j - 1])) / Hdenom
     Hc <- (pc * exp(-Lambda[2, j - 1] - Lambda[4, j - 1])) / Hdenom
 
@@ -97,14 +98,14 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
     #Calculate increments and update Lambda
     crossMat <- Matrix::t(X) %*% W %*% X
-    increment <- tryCatch(Matrix::solve(crossMat) %*% (Matrix::t(X) %*% W %*% dN), error = function(e) e)
-    if(any(class(increment) == "error")) {
-      dLambda[, j] <- rep(0, 4)
-      if(verbose) {
-        message("Ill-conditioned design matrix at time = ", stime[j])
-      }
+    condNum <- kappa(crossMat)
+    if(condNum < maxConditionNumber) {
+      dLambda[, j] <- as.vector(Matrix::solve(crossMat) %*% (Matrix::t(X) %*% W %*% dN))
     } else {
-      dLambda[, j] <- as.vector(increment)
+      dLambda[, j] <- rep(0, 4)
+       if(verbose) {
+         message("Ill-conditioned design matrix at time = ", stime[j], ". Condition number = ", condNum)
+       }
     }
     Lambda[, j] <- dLambda[, j] + Lambda[, j - 1]
 
@@ -114,7 +115,7 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
     V[,2] <- c(rep(0, n), Y * R * C)
 
     dU[, j] <- as.vector(t(V) %*% (dN - X %*% dLambda[, j]))
-  }
+  d}
 
   list(time = stime, Lambda = Lambda, dLambda = dLambda, dU = dU)
 }
