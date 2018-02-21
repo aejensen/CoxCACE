@@ -49,7 +49,7 @@ LambdaCR <- function(time, status, R, C, psi, maxConditionNumber=300, verbose=TR
 
   #Calculate increments and update Lambda
   crossMat <- Matrix::t(X) %*% W %*% X
-  condNum <- kappa(crossMat)
+  condNum <- base::kappa(crossMat)
   if(condNum < maxConditionNumber) {
     dLambda[, 1] <- as.vector(Matrix::solve(crossMat) %*% (Matrix::t(X) %*% W %*% dN))
   } else {
@@ -98,7 +98,7 @@ LambdaCR <- function(time, status, R, C, psi, maxConditionNumber=300, verbose=TR
 
     #Calculate increments and update Lambda
     crossMat <- Matrix::t(X) %*% W %*% X
-    condNum <- kappa(crossMat)
+    condNum <- base::kappa(crossMat)
     if(condNum < maxConditionNumber) {
       dLambda[, j] <- as.vector(Matrix::solve(crossMat) %*% (Matrix::t(X) %*% W %*% dN))
     } else {
