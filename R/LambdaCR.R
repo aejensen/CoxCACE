@@ -49,15 +49,26 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
   #Calculate increments and update Lambda
   crossMat <- t(X) %*% W %*% X
+  increment <- tryCatch(solve(crossMat) %*% (t(X) %*% W %*% dN), error = function(e) e)
+  if(any(class(increment) == "error")) {
+    dLambda[, j] <- rep(0, 4)
+    if(verbose) {
+      message("Ill-conditioned design matrix at time = ", stime[1])
+    }
+  } else {
+    dLambda[, j] <- increment
+  }
+  Lambda[, 1] <- dLambda[, 1] + 0
+
+
   #determinant <- det(crossMat)
   #if (determinant > eps) {
-    dLambda[, 1] <- solve(crossMat) %*% (t(X) %*% W %*% dN)
+  #  dLambda[, 1] <- solve(crossMat) %*% (t(X) %*% W %*% dN)
   #} else {
   #  if(verbose) {
   #    message("Ill-conditioned design matrix at time = ", stime[1], ", determinant = ", determinant)
   #  }
   #}
-  Lambda[, 1] <- dLambda[, 1] + 0
 
   #Calculate increment for U(psi)
   V <- matrix(NA, 2*n , 2)
@@ -101,7 +112,7 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
     if(any(class(increment) == "error")) {
       dLambda[, j] <- rep(0, 4)
       if(verbose) {
-        message("Ill-conditioned design matrix at time = ", stime[1])
+        message("Ill-conditioned design matrix at time = ", stime[j])
       }
     } else {
       dLambda[, j] <- increment
