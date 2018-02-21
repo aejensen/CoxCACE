@@ -49,11 +49,12 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
   #Calculate increments and update Lambda
   crossMat <- t(X) %*% W %*% X
-  if (det(crossMat) > eps) {
+  determinant <- det(crossMat)
+  if (determinant > eps) {
     dLambda[, 1] <- solve(crossMat) %*% (t(X) %*% W %*% dN)
   } else {
     if(verbose) {
-      message("Ill-conditioned design matrix at time = ", stime[1])
+      message("Ill-conditioned design matrix at time = ", stime[1], ", determinant = ", determinant)
     }
   }
   Lambda[, 1] <- dLambda[, 1] + 0
@@ -96,11 +97,12 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
     #Calculate increments and update Lambda
     crossMat <- t(X) %*% W %*% X
-    if (det(crossMat) > eps) {
+    determinant <- det(crossMat)
+    if (determinant > eps) {
       dLambda[, j] <- solve(crossMat) %*% (t(X) %*% W %*% dN)
     } else {
       if(verbose) {
-        message("Ill-conditioned design matrix at time = ", stime[j])
+        message("Ill-conditioned design matrix at time = ", stime[1], ", determinant = ", determinant)
       }
     }
     Lambda[, j] <- dLambda[, j] + Lambda[, j - 1]
