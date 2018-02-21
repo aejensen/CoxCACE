@@ -1,7 +1,7 @@
 estimateCR <- function(time, status, R, C, psiStart, maxConditionNumber=300, verbose=TRUE) {
   rootSearch <- rootSolve::multiroot(function(psi) {
     UCR(time, status, R, C, psi, maxConditionNumber, verbose)
-  }, start=psiStart, maxiter=10^4)
+  }, start=psiStart, maxiter=250)
 
   roots <- rootSearch$root
   values <- rootSearch$f.root
