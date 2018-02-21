@@ -97,9 +97,15 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
     #Calculate increments and update Lambda
     crossMat <- t(X) %*% W %*% X
+    increment <- tryCatch(solve(crossMat) %*% (t(X) %*% W %*% dN), error = function(e) e)
+    if(any(class(out) == "error")) {
+      dLambda[, j] <- rep(0, 4)
+    } else {
+      dLambda[, j] <- increment
+    }
     #determinant <- det(crossMat)
     #if (determinant > eps) {
-      dLambda[, j] <- solve(crossMat) %*% (t(X) %*% W %*% dN)
+    #  dLambda[, j] <- solve(crossMat) %*% (t(X) %*% W %*% dN)
     #} else {
     #  if(verbose) {
     #    message("Ill-conditioned design matrix at time = ", stime[1], ", determinant = ", determinant)
