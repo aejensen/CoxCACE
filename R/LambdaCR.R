@@ -115,7 +115,7 @@ LambdaCR <- function(time, status, R, C, psi, maxConditionNumber=300, verbose=TR
     V[,2] <- c(rep(0, n), Y * R * C)
 
     dU[, j] <- as.vector(t(V) %*% (dN - X %*% dLambda[, j]))
-  d}
+  }
 
   list(time = stime, Lambda = Lambda, dLambda = dLambda, dU = dU)
 }
