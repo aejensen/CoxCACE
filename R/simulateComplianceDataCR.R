@@ -1,4 +1,4 @@
-simulateComplianceDataCR <- function(n, psi1, psi2) {
+simulateComplianceDataCR <- function(n, psi1, psi2, returnTrue = FALSE) {
   p.tr <- 0.5  # Probability of assigned to treatment
   pc.tr <- 0.6 # Probability of compliance
 
@@ -19,6 +19,7 @@ simulateComplianceDataCR <- function(n, psi1, psi2) {
   n01 <- sum((R == 0) & (E1 == 1))
   n10 <- sum((R == 1) & (E1 == 0))
   n11 <- sum((R == 1) & (E1 == 1))
+
 
   #Simulate event times for each principal stratum
   T00.tmp0 <- rexp(n00) / (lambda00.1 + lambda00.2)
@@ -82,6 +83,10 @@ simulateComplianceDataCR <- function(n, psi1, psi2) {
 
   d <- data.frame(rbind(d10, d11, d0))
   names(d) <- c("time", "status", "C", "R")
+
+  if(returnTrue) {
+    d$E <- c(rep(0, length(T10)), rep(1, length(T11)), rep(0, length(T00)), rep(1, length(T01)))
+  }
 
   d
 }

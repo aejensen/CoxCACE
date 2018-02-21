@@ -1,4 +1,4 @@
-simulateComplianceData <- function(n, psi, lambdaC = 1/80, lambdaN = 1/40) {
+simulateComplianceData <- function(n, psi, lambdaC = 1/80, lambdaN = 1/40, returnTrue=FALSE) {
   p.tr <- 0.5  # Probability of assigned to treatment
   pc.tr <- 0.6 # Probability of compliance
 
@@ -17,10 +17,10 @@ simulateComplianceData <- function(n, psi, lambdaC = 1/80, lambdaN = 1/40) {
   n11 <- sum((R == 1) & (E1 == 1))
 
   #Simulate event times
-  T00.tmp0 <- rexp(n00) / lambda00
-  T01.tmp0 <- rexp(n01) / lambda01
-  T10.tmp0 <- rexp(n10) / lambda00
-  T11.tmp0 <- rexp(n11) / (lambda01 * exp(psi))
+  T00.tmp0 <- rexp(n00) / lambda00               #control non-complier
+  T01.tmp0 <- rexp(n01) / lambda01               #control, complier
+  T10.tmp0 <- rexp(n10) / lambda00               #intervention non-complier
+  T11.tmp0 <- rexp(n11) / (lambda01 * exp(psi))  #intervention complier
 
   #Simulate censoring times
   cen1 <- 60
@@ -60,6 +60,11 @@ simulateComplianceData <- function(n, psi, lambdaC = 1/80, lambdaN = 1/40) {
 
   d <- data.frame(rbind(d10, d11, d0))
   names(d) <- c("time", "status", "C", "R")
+
+  if(returnTrue) {
+    #Add true compliance status
+    d$E <- c(rep(0, length(T10)), rep(1, length(T11)), rep(0, length(T00)), rep(1, length(T01)))
+  }
 
   d
 }
