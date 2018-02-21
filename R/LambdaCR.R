@@ -100,6 +100,9 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
     increment <- tryCatch(solve(crossMat) %*% (t(X) %*% W %*% dN), error = function(e) e)
     if(any(class(increment) == "error")) {
       dLambda[, j] <- rep(0, 4)
+      if(verbose) {
+        message("Ill-conditioned design matrix at time = ", stime[1])
+      }
     } else {
       dLambda[, j] <- increment
     }
