@@ -98,7 +98,7 @@ LambdaCR <- function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
     #Calculate increments and update Lambda
     crossMat <- t(X) %*% W %*% X
     increment <- tryCatch(solve(crossMat) %*% (t(X) %*% W %*% dN), error = function(e) e)
-    if(any(class(out) == "error")) {
+    if(any(class(increment) == "error")) {
       dLambda[, j] <- rep(0, 4)
     } else {
       dLambda[, j] <- increment
