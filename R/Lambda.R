@@ -1,4 +1,4 @@
-Lambda = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
+Lambda = function(time, status, R, C, psi, maxConditionNumber=300, verbose=TRUE) {
   n <- length(R)
   stime <- sort(time[status != 0])
   k <- length(stime)
@@ -34,14 +34,23 @@ Lambda = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
   #Calculate increments and update Lambda
   crossMat <- t(X) %*% W %*% X
-  if (det(crossMat) > eps) {
+  condNum <- base::kappa(crossMat)
+  if(condNum < maxConditionNumber) {
     dLambda[, 1] <- solve(crossMat) %*% (t(X) %*% W %*% matrix(dN, ncol = 1))
   } else {
+    dLambda[, 1] <- rep(0, 2)
     if(verbose) {
-      message("Ill-conditioned design matrix at time = ", stime[1])
+      message("Ill-conditioned design matrix at time = ", stime[1], ". Condition number = ", condNum)
     }
   }
   Lambda[, 1] <- dLambda[, 1] + 0
+  #if (det(crossMat) > eps) {
+  #  dLambda[, 1] <- solve(crossMat) %*% (t(X) %*% W %*% matrix(dN, ncol = 1))
+  #} else {
+  #  if(verbose) {
+  #    message("Ill-conditioned design matrix at time = ", stime[1])
+  #  }
+  #}
 
   #Calculate increment for U(psi)
   v <- matrix(Y * R * C, ncol = 1)
@@ -68,14 +77,23 @@ Lambda = function(time, status, R, C, psi, eps=0.001, verbose=TRUE) {
 
     #Calculate increments and update Lambda
     crossMat <- t(X) %*% W %*% X
-    if (det(crossMat) > eps) {
+    condNum <- base::kappa(crossMat)
+    if(condNum < maxConditionNumber) {
       dLambda[, j] <- solve(crossMat) %*% (t(X) %*% W %*% matrix(dN, ncol = 1))
     } else {
+      dLambda[, j] <- rep(0, 2)
       if(verbose) {
-        message("Ill-conditioned design matrix at time = ", stime[j])
+        message("Ill-conditioned design matrix at time = ", stime[j], ". Condition number = ", condNum)
       }
     }
     Lambda[, j] <- dLambda[, j] + Lambda[, j - 1]
+    #if (det(crossMat) > eps) {
+    #  dLambda[, j] <- solve(crossMat) %*% (t(X) %*% W %*% matrix(dN, ncol = 1))
+    #} else {
+    #  if(verbose) {
+    #    message("Ill-conditioned design matrix at time = ", stime[j])
+    #  }
+    #}
 
     #Calculate increment for U(psi)
     v <- matrix(Y * R * C, ncol = 1)

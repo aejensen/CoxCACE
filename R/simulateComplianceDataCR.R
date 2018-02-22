@@ -44,7 +44,7 @@ simulateComplianceDataCR <- function(n, psi1, psi2, returnTrue = FALSE) {
                     prob = c((lambda01.1 * exp(psi1)) / (lambda01.1 * exp(psi1) + lambda01.2 * exp(psi2)),
                              (lambda01.2 * exp(psi2)) / (lambda01.1 * exp(psi1) + lambda01.2 * exp(psi2))))
 
-  #Simulate thecensoring times
+  #Simulate the censoring times
   cen1 <- 60
   cen2 <- 100
   entryt2 <- 75
